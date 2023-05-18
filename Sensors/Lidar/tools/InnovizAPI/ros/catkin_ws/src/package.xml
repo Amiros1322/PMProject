@@ -1,0 +1,20 @@
+<package format="2">
+  <name>innoviz_ros</name>
+  <version>1.0.0</version>
+  <description>
+    Innoviz ROS Driver
+  </description>
+  <maintainer email="technical.support@innoviz-tech.com">Innoviz Tech Support</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>roscpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>libpcl-all-dev</build_depend>
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>libpcl-all</exec_depend>
+
+</package>
