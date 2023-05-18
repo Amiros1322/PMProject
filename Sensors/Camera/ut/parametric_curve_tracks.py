@@ -1,7 +1,7 @@
 # Parametric curves for tracks
 import numpy as np
 import math
-
+import sys
 
 def bezier_track(p0, p1, p2, p3):
     def _inner_curve(t):  # TODO: Shouldnt this return two values?
