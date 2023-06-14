@@ -1,6 +1,6 @@
 from enum import IntEnum
 import numpy as np
-from src.motion_models.motion_model_interface import INonLinearMotionModel
+from Sensors.IMU.src.motion_models.motion_model_interface import INonLinearMotionModel
 
 class StateIdx(IntEnum):
     x = 0

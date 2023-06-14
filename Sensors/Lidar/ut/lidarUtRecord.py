@@ -2,13 +2,10 @@ import argparse
 import sys
 import time
 
-# append the path of the
-# parent directory
-
 sys.path.append("../src")
-from filters_algo import LidarFilter
-from pcl_reader import PCL_Reader
-from visualizers import Visualizer
+from Sensors.Lidar.src.filters_algo import LidarFilter
+from Sensors.Lidar.src.pcl_reader import PCL_Reader
+from Sensors.Lidar.src.visualizers import Visualizer
 
 def parse_opt():
     parser = argparse.ArgumentParser()

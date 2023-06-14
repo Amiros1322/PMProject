@@ -1,15 +1,18 @@
 <h1 align="center"> Perception-Mapping </h1>
-<p align="center">
-<img src="figures/img_2.png" align="center" alt="drawing" height="300" width="400"> <img src="figures/img_3.png" align="center" alt="drawing" height="300" width="400">
-</p>
+<table>
+  <tr>
+    <td style="width:50%"><img src="figures/img_2.png" title="LiDAR"></td>
+    <td style="width:50%"><img src="figures/img_3.png" title="Camera"></td>
+  </tr>
+</table>
 
 ## Installations:
 **Important**: If you want to use the <u>camera </u> or the <u>mapping projects only</u>, skip the lidar software installations.
 
 ### 1. Clone the project
 ``` 
-git clone https://github.com/BGU-Racing/BGR-PM
-cd BGR-PM
+git clone https://github.com/Amiros1322/PMProject.git
+cd PMProject
 ```  
  
 ### 2. Create & activate the Anaconda environment 
@@ -24,11 +27,19 @@ conda activate pm_project
 <br>
 In this window, select the following options:
 
-![img_1.png](figures/img_1.png)
-![img.png](figures/img.png)
+<table>
+  <tr>
+    <td style="width:100%"><img src="figures/img_1.png" style="width:100%"></td>  
+  </tr>
+  <tr>
+    <td style="width:100%"><img src="figures/img.png"></td>
+  </tr>
+</table>
+
 <br>
-and install it.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and install it.
 <br>
+
 * Install npcap
   * Download and install the latest npcap release from https://nmap.org/download.html
   * If you have WinPcap installed, permit npcap to uninstall WinPcap.
@@ -43,10 +54,10 @@ and install it.
   cd ../../
   ```
 
-  * Run the code:
+  <!-- * Run the code:
   ```
   python ut/pm_ut.py
-  ```
+  ``` -->
 
 * <b> For camera only: </b>
   
@@ -78,21 +89,14 @@ and install it.
 
   
 
-* <b> For mapping only: </b>
+* <b> For IMU only: </b>
 
   * Install the requirements:
     ```
-    cd Mapping
+    cd IMU
     pip3 install -r requirements.txt
     ```
   * Run the code:
     ```
-    python ut/mappingUT.py
+    python ut/kalman_filter_simulator.py
     ```
-    
-
-
-
-
-
-

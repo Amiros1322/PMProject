@@ -1,6 +1,6 @@
 import numpy as np
-from src.measurement_models.measurement_model_interface import INonLinearMeasurementModel
-from src.motion_models.kbm import StateIdx
+from Sensors.IMU.src.measurement_models.measurement_model_interface import INonLinearMeasurementModel
+from Sensors.IMU.src.motion_models.kbm import StateIdx
 
 class IMUMeasurementModel(INonLinearMeasurementModel):
     def __init__(self, wheelbase: float):
