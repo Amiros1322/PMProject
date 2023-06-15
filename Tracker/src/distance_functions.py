@@ -17,8 +17,8 @@ Consists of functions s.t.:
 """
 from typing import Dict, NamedTuple, List, Tuple
 import numpy as np
-from common import Detection, State
-from MultiObjectTracker import Target
+from Tracker.src.common import Detection, State
+from Tracker.src.MultiObjectTracker import Target
 
 class DistanceMessage(NamedTuple):
     distance_matrix: np.ndarray

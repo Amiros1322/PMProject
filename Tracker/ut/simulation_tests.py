@@ -1,16 +1,15 @@
 import copy
 import random
-from TrackingUt import random_list_delete, simulated_cones_to_detection, global_to_ego_frame, ego_to_global_frame
-from parametric_curve_tracks import circle_track, bezier_track, straight_track, get_cone_locations
 import numpy as np
 import matplotlib.pyplot as plt
-from MultiObjectTracker import MultiObjectTracker
-from common import Localization, Car, SimulatedCone
-from simulated_data import first_frame, np_to_detection_list, add_noise, generate_track, detection_list_to_np
-from common import Detection
-from tracking_vis import ConsecutiveFramePlotter
 from typing import Tuple, List
-import timeit
+from Tracker.src.TrackingUt import random_list_delete, simulated_cones_to_detection, global_to_ego_frame, ego_to_global_frame
+from Tracker.src.parametric_curve_tracks import circle_track, bezier_track, straight_track, get_cone_locations
+from Tracker.src.MultiObjectTracker import MultiObjectTracker
+from Tracker.src.common import Localization, Car, SimulatedCone, Detection
+from Tracker.src.simulated_data import first_frame, np_to_detection_list, add_noise, generate_track, detection_list_to_np
+from Tracker.src.tracking_vis import ConsecutiveFramePlotter
+
 
 
 def main():

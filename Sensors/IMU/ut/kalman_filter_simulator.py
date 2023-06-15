@@ -2,13 +2,13 @@ from typing import List
 import numpy as np
 import matplotlib.pyplot as plt
 
-from src.runge_kutta4 import propagate_state
-from src.motion_models.kbm import KinematicBicycleModel, StateIdx
-from src.kalman_filter import KinematicBicycleModelKF
-from src.measurement_models.kbm.imu import IMUMeasurementModel
-from src.measurement_models.kbm.wheel_speed import WheelSpeedMeasurementModel
-from src.measurement_models.kbm.imu_and_wheel_speed import IMUAndWheelSpeedMeasurementModel
-from src.common import State, Measurement
+from Sensors.IMU.src.runge_kutta4 import propagate_state
+from Sensors.IMU.src.motion_models.kbm import KinematicBicycleModel, StateIdx
+from Sensors.IMU.src.kalman_filter import KinematicBicycleModelKF
+from Sensors.IMU.src.measurement_models.kbm.imu import IMUMeasurementModel
+from Sensors.IMU.src.measurement_models.kbm.wheel_speed import WheelSpeedMeasurementModel
+from Sensors.IMU.src.measurement_models.kbm.imu_and_wheel_speed import IMUAndWheelSpeedMeasurementModel
+from Sensors.IMU.src.common import State, Measurement
 
 
 MILLI2SEC = 1e-3
@@ -151,9 +151,9 @@ class KalmanFilterSimulator:
         pass
 
 
-def main():
+def start_kalman_filter_simulator():
     KalmanFilterSimulator().run()
 
 
 if __name__ == "__main__":
-    main()
+    start_kalman_filter_simulator()

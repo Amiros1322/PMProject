@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
-from common import Detection, Target
 from typing import Dict, NamedTuple, List  # TODO: Ask about dataclasses
-from distance_functions import target_dict_to_np, detection_list_to_np
-from MultiObjectTracker import TrackedCones, MultiObjectTracker
-from common import Localization, Detection, Car, Target
+from Tracker.src.common import Detection, Target
 import numpy as np
 import copy
+from Tracker.src.distance_functions import target_dict_to_np, detection_list_to_np
+from Tracker.src.MultiObjectTracker import TrackedCones, MultiObjectTracker
+from Tracker.src.common import Localization, Detection, Car, Target
 
 
 def visualize_consec_frames(prev_cones, curr_cones, x_label, y_label, fontsize=6, color="red", colored_cones=True):

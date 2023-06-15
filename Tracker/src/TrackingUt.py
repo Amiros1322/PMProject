@@ -1,17 +1,16 @@
 import copy
 import random
-from common import SimulatedCone, Detection
 from typing import List, Callable
 import numpy as np
 import math
+from Tracker.src.common import SimulatedCone, Detection
+
 
 """
 Input: detections of two opposite cones on a straight section of the track.
 
 Output: the distance between the camera and the part of the track between the cones
 """
-
-
 def two2three_d(cone_left, cone_right, focal_length, image_length, track_width=3, cone_width=4):
     # cones <- [x, y, width, height]
     delta_phys = track_width + cone_width  # real physical distance between cones (by track regulations)
