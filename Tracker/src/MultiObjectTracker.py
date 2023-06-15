@@ -104,7 +104,7 @@ class MultiObjectTracker:
                             cone_class=det.cone_class)
             self._targets[new_id] = target
 
-    def _associate(self, detections: List[Detection], distance_matrix_func=l2_norm) -> tuple[Dict[int, Detection], List[Detection]]:
+    def _associate(self, detections: List[Detection], distance_matrix_func=l2_norm) -> Tuple[Dict[int, Detection], List[Detection]]:
         predicted = self._targets
 
         if len(detections) == 0 or len(predicted) == 0:
@@ -178,7 +178,7 @@ class MultiObjectTracker:
             unassigned[id] = predicted_obj[id]
         return unassigned
 
-    def _no_detection_or_prediction_asociation(self, detections: List) -> tuple[Dict, List]:
+    def _no_detection_or_prediction_asociation(self, detections: List) -> Tuple[Dict, List]:
         if len(detections) == 0:
             assigned_detections, unassigned_detections = {}, []
             return assigned_detections, unassigned_detections

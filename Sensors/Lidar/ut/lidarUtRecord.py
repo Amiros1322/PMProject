@@ -18,12 +18,10 @@ def parse_opt():
     return opt
 
 def start_simulator_lidar():
+    print("Lidar")
     opt = parse_opt()
-    print(777)
     recording_path = opt.record_path
-    print(777)
     reader = PCL_Reader(recording_path, start_frame_num=opt.frame_num)
-    print(777)
     lidar_filter = LidarFilter()
     visualizer = Visualizer(visualizer=opt.visualizer)
 

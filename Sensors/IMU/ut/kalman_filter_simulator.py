@@ -1,5 +1,6 @@
 from typing import List
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 
 from Sensors.IMU.src.runge_kutta4 import propagate_state
@@ -132,6 +133,9 @@ class KalmanFilterSimulator:
         return states
 
     def _visualize_results(self, GT: np.ndarray, estimation: List[State]):
+        if matplotlib.get_backend() == "agg":
+            matplotlib.use("TkAgg")
+
         X = np.concatenate([state.x for state in estimation], axis=1)
         plt.plot(GT[StateIdx.x, :], GT[StateIdx.y, :], color='blue', label='ground truth')
         plt.plot(X[StateIdx.x, :], X[StateIdx.y, :], color='red', label='estimation')

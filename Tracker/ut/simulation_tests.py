@@ -107,7 +107,7 @@ def full_track_cones(show_frame_by_frame=True, n_to_del=1, track=straight_track(
 
     # Initiating tracker and plotter
     tracker = MultiObjectTracker()
-    plotter = ConsecutiveFramePlotter(tracker, car=car, x_label="Theta", y_label="Range", predict_last=predict_last)
+    plotter = ConsecutiveFramePlotter(tracker, def_ego=False, car=car, x_label="Theta", y_label="Range", predict_last=predict_last)
 
     plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=False)  # First frame: no detections
     plotter.execute_and_plot(STATIC_LOCALIZATION, cones, plot=show_frame_by_frame, plot_car=True)  # second frame: cones appear

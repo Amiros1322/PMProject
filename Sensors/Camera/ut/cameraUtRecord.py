@@ -8,7 +8,7 @@ from Sensors.Camera.src.detect import run
 from Sensors.Camera.src.utils.general import print_args
 from pathlib import Path
 
-ROOT = Path("../src")
+ROOT = Path("../Sensors/Camera/src")  # Runs from PMProject/ut
 FILE = Path(__file__).resolve()
 
 # TODO: delete args that dont exist
@@ -46,19 +46,21 @@ def parse_opt():
     return opt
 
 
-def start_camera_simulator(opt, run_through_pycharm=False):
+def start_camera_simulator():
     use_pycharm = True
     opt = parse_opt()
+    inner_init_simulator(opt, run_through_pycharm=use_pycharm)
+
+
+def inner_init_simulator(opt, run_through_pycharm=False):
     if run_through_pycharm:
         # these are the params in the readme as of 12/1
         weight_path = "../src/weights/bgracing_cones_detector_nano.pt"
-        source = "record_example/record_motorcity.avi"
+        source = "ut/record_example/record_motorcity.avi"  # in ut
         run(view_img=True, line_thickness=2, nosave=False, augment=False, agnostic_nms=False, save_crop=False, save_conf=False, save_txt=False, source=source, weights=weight_path)
     else:
         run(**vars(opt))
 
 
 if __name__ == "__main__":
-    use_pycharm = True
-    opt = parse_opt()
-    start_camera_simulator(opt, run_through_pycharm=use_pycharm)
+    start_camera_simulator()

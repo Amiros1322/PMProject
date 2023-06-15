@@ -49,7 +49,6 @@ from utils.camera_utils import two2three_d
 import numpy as np
 
 
-
 @torch.no_grad()
 def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         source=ROOT / 'data/images',  # file/dir/URL/glob, 0 for webcam
@@ -100,7 +99,8 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
 
     # Load model
     device = select_device(device)
-    model = DetectMultiBackend(weights, device=device, dnn=dnn, data=data)
+    weights2 = "../Sensors/Camera/src/weights/bgracing_cones_detector_nano.pt"
+    model = DetectMultiBackend(weights2, device=device, dnn=dnn, data=data)
     stride, names, pt = model.stride, model.names, model.pt
 
     # TODO: checks image size works with the stride. Remove after image size known and hardcoded
@@ -120,7 +120,7 @@ def run(weights=ROOT / 'yolov5s.pt',  # model.pt path(s)
         dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
         bs = len(dataset)  # batch_size
     else:
-        dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
+        dataset = LoadImages(ROOT.parent / source, img_size=imgsz, stride=stride, auto=pt)
         bs = 1  # batch_size
     vid_path, vid_writer = [None] * bs, [None] * bs
 

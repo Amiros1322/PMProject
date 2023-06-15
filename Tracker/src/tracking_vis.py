@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib
 from typing import Dict, NamedTuple, List  # TODO: Ask about dataclasses
 from Tracker.src.common import Detection, Target
 import numpy as np
@@ -383,6 +384,10 @@ class ConsecutiveFramePlotter:
 
         assert isinstance(car, Car)
 
+        # makes sure object always displays backend
+        if matplotlib.get_backend() == "agg":
+            matplotlib.use("TkAgg")
+
         self.tracker = tracker  # Tracker object
         self.prev_car = None  # Car objects
         self.car = car
@@ -407,7 +412,7 @@ class ConsecutiveFramePlotter:
         """Plots new cones and keeps track of which to plot where"""
         self._copy_curr_values_to_prev_values()
         self.curr_det = copy.deepcopy(detections)
-        self.car.move_car(localization)
+        self.car.move_car(localization, ego)
         detections = self.car.detect(detections, filter_fov=True)  # What the car actually does detects within its fov.
 
         # Execute tracker
