@@ -3,15 +3,13 @@ from typing import List, NamedTuple, Callable, Tuple
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline
-from parametric_curve_tracks import straight_track, circle_track, get_cone_locations, bezier_track
 from scipy.optimize import linear_sum_assignment
-from TrackingUt import random_dict_delete, cart_to_polar, simulated_cones_to_numpy, simulated_cones_to_detection
-from MultiObjectTracker import MultiObjectTracker
-from common import Localization, Detection, Car, SimulatedCone
-from distance_functions import target_dict_to_np, detection_list_to_np, np_to_detection_list
-from tracking_vis import visualize_detection, visualize_labeling, visualize_ground_truth
-from dataclasses import dataclass
-
+from Tracker.src.parametric_curve_tracks import straight_track, circle_track, get_cone_locations, bezier_track
+from Tracker.src.TrackingUt import random_dict_delete, cart_to_polar, simulated_cones_to_numpy, simulated_cones_to_detection
+from Tracker.src.MultiObjectTracker import MultiObjectTracker
+from Tracker.src.common import Localization, Detection, Car, SimulatedCone
+from Tracker.src.distance_functions import target_dict_to_np, detection_list_to_np, np_to_detection_list
+from Tracker.src.tracking_vis import visualize_detection, visualize_labeling, visualize_ground_truth
 
 class Frame(NamedTuple):
     time: float
@@ -62,14 +60,12 @@ class CarStruct:
 
 def create_simulated_data2(params: Params):
     # Generate track, first frame, etc.
-    frame1, detections_polar, car, real_cones, cartesian_points = first_frame(straight_track(m=2, b=-4), car_t=0.1,
-                                                                              samples=10)
+    frame1, detections_polar, car, real_cones, cartesian_points = first_frame(straight_track(m=2, b=-4), car_t=0.1, samples=10)
     cart_as_list = np_to_detection_list(cartesian_points, first_color=False)
 
     # create tracker and populate with inital detections
     tracker = MultiObjectTracker(default_alpha=0.95, alpha_nonexist_thresh=0.5)
-    tracked_cones = tracker.execute(Localization(x_ego=0, y_ego=0, theta_ego=0, qxx=1, qyy=1), cart_as_list,
-                                    dtime=params.dt)
+    tracked_cones = tracker.execute(Localization(x_ego=0, y_ego=0, theta_ego=0, qxx=1, qyy=1), cart_as_list, dtime=params.dt)
 
     # do weird stuff to the points
     np.random.shuffle(cartesian_points)
@@ -332,8 +328,7 @@ def first_frame(track_func, car_t=0.0, car_angle=0.35 * np.pi, fov=0.3 * np.pi, 
     return points_to_ret, car, sim_cones
 
 
-def generate_track(track_func, samples=8, cone_distance=4, eps=0.02, num_orange_cones=0, as_numpy=False) -> List[
-    SimulatedCone]:
+def generate_track(track_func, samples=8, cone_distance=4, eps=0.02, num_orange_cones=0, as_numpy=False) -> List[SimulatedCone]:
     """
     A function to generate the 'ground truth' of the simulation. Takes track parameters and returns cones.
 

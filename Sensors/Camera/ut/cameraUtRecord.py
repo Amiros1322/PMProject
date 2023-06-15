@@ -4,9 +4,10 @@ import sys
 # append the path of the
 # parent directory
 sys.path.append("../src")
-from detect import run
-from utils.general import print_args
+from Sensors.Camera.src.detect import run
+from Sensors.Camera.src.utils.general import print_args
 from pathlib import Path
+
 ROOT = Path("../src")
 FILE = Path(__file__).resolve()
 
@@ -45,7 +46,9 @@ def parse_opt():
     return opt
 
 
-def main(opt, run_through_pycharm=False):
+def start_camera_simulator(opt, run_through_pycharm=False):
+    use_pycharm = True
+    opt = parse_opt()
     if run_through_pycharm:
         # these are the params in the readme as of 12/1
         weight_path = "../src/weights/bgracing_cones_detector_nano.pt"
@@ -56,6 +59,6 @@ def main(opt, run_through_pycharm=False):
 
 
 if __name__ == "__main__":
-    USE_PYCHARM = True
+    use_pycharm = True
     opt = parse_opt()
-    main(opt, run_through_pycharm=USE_PYCHARM)
+    start_camera_simulator(opt, run_through_pycharm=use_pycharm)

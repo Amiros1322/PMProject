@@ -18,7 +18,7 @@ cd PMProject
 ### 2. Create & activate the Anaconda environment 
 * Install anaconda from [here](https://www.anaconda.com)
 ```
-conda create -n pm_project python=3.6
+conda create -n pm_project python=3.6 anaconda
 conda activate pm_project 
 ```
 

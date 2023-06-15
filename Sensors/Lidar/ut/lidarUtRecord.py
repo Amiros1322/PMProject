@@ -17,7 +17,7 @@ def parse_opt():
     opt = parser.parse_args()
     return opt
 
-if __name__ == "__main__":
+def start_simulator_lidar():
     opt = parse_opt()
     print(777)
     recording_path = opt.record_path
@@ -34,3 +34,7 @@ if __name__ == "__main__":
     visualizer.show(curr_original_points)
     visualizer.show(curr_points)
     visualizer.show(curr_ground_points)
+
+
+if __name__ == "__main__":
+    start_simulator_lidar()

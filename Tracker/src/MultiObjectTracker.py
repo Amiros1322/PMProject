@@ -1,8 +1,8 @@
 from typing import Dict, NamedTuple, List, Tuple
 import numpy as np
-from common import Localization, Detection, Target, get_detection_state
-from distance_functions import l2_norm
 from scipy.optimize import linear_sum_assignment
+from Tracker.src.common import Localization, Detection, Target, get_detection_state
+from Tracker.src.distance_functions import l2_norm
 
 
 class State(NamedTuple):
@@ -104,8 +104,7 @@ class MultiObjectTracker:
                             cone_class=det.cone_class)
             self._targets[new_id] = target
 
-    def _associate(self, detections: List[Detection], distance_matrix_func=l2_norm) -> (
-    Dict[int, Detection], List[Detection]):
+    def _associate(self, detections: List[Detection], distance_matrix_func=l2_norm) -> tuple[Dict[int, Detection], List[Detection]]:
         predicted = self._targets
 
         if len(detections) == 0 or len(predicted) == 0:
@@ -179,7 +178,7 @@ class MultiObjectTracker:
             unassigned[id] = predicted_obj[id]
         return unassigned
 
-    def _no_detection_or_prediction_asociation(self, detections: List) -> (Dict, List):
+    def _no_detection_or_prediction_asociation(self, detections: List) -> tuple[Dict, List]:
         if len(detections) == 0:
             assigned_detections, unassigned_detections = {}, []
             return assigned_detections, unassigned_detections
@@ -197,8 +196,7 @@ class MultiObjectTracker:
         pred_ind2det_ind = dict(zip(tuple(ordered_ids_ind.tolist()), det_ind))
         return self._assigned_detection_matrix_to_dict(new_ass_mat, detections, pred_ind2det_ind)
 
-    def _id_to_detection_covariance_map(self, assignment_matrix: np.ndarray, detections: Dict[int, Detection]) -> Dict[
-        int, np.ndarray]:
+    def _id_to_detection_covariance_map(self, assignment_matrix: np.ndarray, detections: Dict[int, Detection]) -> Dict[int, np.ndarray]:
         id_to_cov = {}
         detection_set = set(detections)
         for row in assignment_matrix:
@@ -315,13 +313,3 @@ class MultiObjectTracker:
             return self._distance_functions[norm_str]
         raise Exception(
             f"INVALID VALUE for 'dist_mat_func_to_use'. Legal values are {list(self._distance_functions.keys())}")
-
-    # def _get_update_params(self, localization: Localization):
-    #     r_polar = np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]])
-    #     j_cart
-
-    # cone predictions
-    # predictions = {i: {'cov': None, 'pred': None} for i in detections[:, 0]}
-    # for row in detections:  # for every cone
-    #     predictions[row[0]]['pred'] = F @ row[1:] + u
-    #     predictions[row[0]]['cov'] = F @ P @ F.T + Q
