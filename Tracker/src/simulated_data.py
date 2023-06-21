@@ -349,6 +349,7 @@ def generate_track(track_func, samples=8, cone_distance=4, eps=0.02, num_orange_
     t_low = t_vals - eps
     t_top = t_vals + eps
 
+    # the epsilons we take to calc derivatives should not be outside function range
     t_low[t_low < 0] = 0
     t_top[t_top > 1] = 1
 

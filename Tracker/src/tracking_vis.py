@@ -143,10 +143,9 @@ def plot_car(ax, car, plot_view_angle=False, plot_fov=False, fov_range=(50, 50),
         return
     assert type(fov_range) == tuple and len(fov_range) == 2
 
-    if ego:
-        ax.scatter(0, 0, c="green")
-    else:
-        ax.scatter(car.x_global, car.y_global, c="green")
+    # if ego:
+    #     ax.scatter(0, 0, c="green")
+    ax.scatter(car.x_global, car.y_global, c="green")
 
     dashed_line_x_start = car.x_global - fov_range[0]
     dashed_line_x_end = car.x_global + fov_range[1]
@@ -249,7 +248,7 @@ def visualize_labeling(ax, labeled_detections, subplot_title=None, x_label=None,
         for i in range(len(x_vals)):
             x = x_vals[i]
             y = y_vals[i]
-            ax.text(x, y - 2, f"({round(x)}", fontsize=fontsize, color='purple')
+            # ax.text(x, y - 2, f"({round(x)}", fontsize=fontsize, color='purple')
 
     plot_car(ax, car, plot_view_angle=plot_view_angle, plot_fov=plot_fov, fov_range=plot_fov_range, ego=ego)
 
@@ -269,7 +268,7 @@ def plot_cones_from_dict(ax, cone_dict: Dict[int, Target], fontsize=16, fontcolo
         if plot_ids:
             ax.text(x, y, f"id:{t_id} conf:{round(target.existence_probability, 2)}", fontsize=fontsize,
                     color=fontcolor)
-            ax.text(x, y - 2, f"({round(x)}", fontsize=fontsize, color='purple')
+            # ax.text(x, y - 2, f"({round(x)}", fontsize=fontsize, color='purple')
     ax.scatter(x_vals, y_vals, color=color_vals)
 
 
@@ -294,8 +293,8 @@ def plot_tracks(ax, cones, subplot_title=None, x_label=None, y_label=None, show_
 
     plot_cones_from_dict(ax, cone_dict, fontsize=fontsize, fontcolor=fontcolor, plot_ids=plot_ids)
     plot_car(ax, car=car, plot_fov=plot_fov, plot_view_angle=plot_view_angle, fov_range=plot_fov_range, ego=ego)
-    print(f"Car fov: {np.degrees(car.fov)}")
-    print(f"Car view angle: {np.tan(car._center_slope)}")
+    # print(f"Car fov: {np.degrees(car.fov)}")
+    # print(f"Car view angle: {np.tan(car._center_slope)}")
     set_axis_titles(ax, subplot_title, x_label, y_label)
 
     if show_plot:
@@ -405,15 +404,15 @@ class ConsecutiveFramePlotter:
         self.fullscreen_default = fullscreen_default
         self.predict_last = predict_last
         self.def_ego = def_ego
-    def execute_and_plot(self, localization: Localization, detections: List[Detection], plot_type="pred", plot=True,
-                         figure_title=None, covariances=False, plot_car=False, fov_plot_range=None,
+    def execute_and_plot(self, localization: Localization, detections: List[Detection], plot_type="det", plot=True,
+                         figure_title=None, covariances=False, plot_car=False, fov_plot_range=None, plot_fov=False,
                          fullscreen=None, ego=None) -> None:
         assert plot_type in {"pred", "det", "tracked"}  # Tracked is just tracked, det is tracked + detected, pred is + predicted
         """Plots new cones and keeps track of which to plot where"""
         self._copy_curr_values_to_prev_values()
         self.curr_det = copy.deepcopy(detections)
         self.car.move_car(localization, ego)
-        detections = self.car.detect(detections, filter_fov=True)  # What the car actually does detects within its fov.
+        detections = self.car.detect(detections, filter_fov=False)  # What the car actually does detects within its fov.
 
         # Execute tracker
         if plot_type == "pred":
@@ -430,6 +429,7 @@ class ConsecutiveFramePlotter:
             figure_title = self._build_title(localization=localization)
 
         car = self.car if plot_car else None
+        self.prev_car = self.prev_car if plot_car else None
         fov_range = fov_plot_range if fov_plot_range is not None else self.def_fov_range
         show_in_fullscreen = self.fullscreen_default if fullscreen is None else fullscreen
         ego = self.def_ego if not ego else ego
@@ -441,7 +441,7 @@ class ConsecutiveFramePlotter:
                                                                self.curr_det, self.prev_preds, self.curr_preds,
                                                                "Global x-axis", "Global y-axis", fig_title=figure_title,
                                                                covariances=covariances, car=car,
-                                                               plot_fov_range=fov_range,
+                                                               plot_fov_range=fov_range, plot_fov=plot_fov,
                                                                prev_car=self.prev_car, fullscreen=show_in_fullscreen,
                                                                ground_truth=self.ground_truth, ego=ego)
             elif plot_type == "det":
@@ -449,7 +449,7 @@ class ConsecutiveFramePlotter:
                                                                self.curr_det,
                                                                "Global x-axis", "Global y-axis", fig_title=figure_title,
                                                                covariances=covariances, car=car,
-                                                               plot_fov_range=fov_range,
+                                                               plot_fov_range=fov_range, plot_fov=plot_fov,
                                                                prev_car=self.prev_car, fullscreen=show_in_fullscreen,
                                                                ground_truth=self.ground_truth)
             else:

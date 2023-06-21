@@ -8,7 +8,7 @@ if __name__ == "__main__":
     print("inside")
     # start_simulator_lidar()
 
-    start_kalman_filter_simulator()
+    # start_kalman_filter_simulator()
     # start_camera_simulator()
-    # horizontal_track()
+    horizontal_track()
     

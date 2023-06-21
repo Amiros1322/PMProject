@@ -15,7 +15,6 @@ def visualize_consec_frames(prev_cones, curr_cones, x_label, y_label, fontsize=6
     plt.show()
 
 
-
 def visualize_consec_frames_with_detections(prev_cones, curr_cones, x_label, y_label, fontsize=6, color="red", colored_cones=True):
     fig, ax = plt.subplots(nrows=2, ncols=2, sharey=True, sharex=True)
     fig.subplots_adjust(hspace=0.5)

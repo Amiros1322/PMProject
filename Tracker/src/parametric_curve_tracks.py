@@ -5,6 +5,11 @@ import math
 
 def bezier_track(p0, p1, p2, p3):
     def _inner_curve(t):  # TODO: Shouldnt this return two values?
+        if type(t) == list:
+            return [(1 - item)**3 * p0 + 3 * (1 - item)**2 * item * p1 + 3 * (1 - item) * item**2 * p2 + item**3 * p3 for item in t]
+        elif type(t) == np.ndarray:
+            point_lst = [(1 - item)**3 * p0 + 3 * ((1 - item)**2 * item * p1) + (3 * (1 - item) * item**2 * p2) + (item**3 * p3) for item in t]
+            return  np.array([pnt[0] for pnt in point_lst]), np.array([pnt[1] for pnt in point_lst])
         return (1 - t)**3 * p0 + 3 * (1 - t)**2 * t * p1 + 3 * (1 - t) * t**2 * p2 + t**3 * p3
     return _inner_curve
 

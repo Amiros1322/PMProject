@@ -16,9 +16,12 @@ def main():
     # t = straight_track(m=0, b=0)
     # cone_mat, ff_car, sim_cones = first_frame(t, points_as_cartesian=True)
     # ins_car, ins_sim_cones = initialize_simulation(t, get_cones_as_detections=False)
-
-    # horizontal_track()
-    diagonal_track()
+    # test_placement()
+    # diagonal_track()
+    # bezier(show_frame_by_frame=True, n_to_del=2)
+    # circular(show_frame_by_frame=True)
+    # disappearing_static_cone()
+    horizontal_track()
 
 
 
@@ -58,25 +61,27 @@ def disappearing_static_cone(show_frame_by_frame=True):
     STATIC_LOCALIZATION = Localization(x_ego=0, y_ego=0, theta_ego=0, qyy=1, qxx=1)
     STANDARD_COVARIANCE = np.array([[1, 0], [0, 1]])
 
-    # Getting the cone detection
-    detections_polar, car, cone_objects = first_frame(straight_track(m=2, b=-4), car_t=0.1,
-                                                                              samples=10, plot=False)
+    # Creating "ground truth"
+    track = straight_track(0, 0)
+    car, global_cones = initialize_simulation(track_func=track, car_angle=0, fov=0.45*np.pi, samples=3)
+    # cones = global_to_ego_frame(car, global_cones)
+    cones = global_cones
 
     tracker = MultiObjectTracker()
-    plotter = ConsecutiveFramePlotter(tracker, car=car, x_label="Theta", y_label="Range", fullscreen_default=True)
-    single_cone_detection = np_to_detection_list(detections_polar, first_color=True)[0]
+    plotter = ConsecutiveFramePlotter(tracker, car=car, x_label="Theta", y_label="Range", fullscreen_default=False, def_ego=False)
+    single_cone_detection = global_cones[0]
 
-    plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=False)  # First frame: no detections
-    plotter.execute_and_plot(STATIC_LOCALIZATION, [single_cone_detection], plot=show_frame_by_frame)  # second frame: cone appears
+    plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=False, plot_car=False)  # First frame: no detections
+    plotter.execute_and_plot(STATIC_LOCALIZATION, [single_cone_detection], plot=show_frame_by_frame, plot_car=False)  # second frame: cone appears
 
     # add some noise to measurement in second and third frames
     for _ in range(2):
         noisy_cone = add_noise([single_cone_detection], noise_mu=0.5, noise_std=0.1, cov_noise_mu=0, cov_noise_std=0)
-        plotter.execute_and_plot(STATIC_LOCALIZATION, noisy_cone, plot=show_frame_by_frame)
+        plotter.execute_and_plot(STATIC_LOCALIZATION, noisy_cone, plot=show_frame_by_frame, plot_car=False)
 
     # the cone disappears for 5 detections
     for _ in range(5):
-        plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=show_frame_by_frame)
+        plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=show_frame_by_frame, plot_car=False)
 
     # random cone locations
     for _ in range(10):
@@ -87,11 +92,11 @@ def disappearing_static_cone(show_frame_by_frame=True):
         random_cone2 = Detection(cam_x=round(random.random() * magnitude, 3),
                                  cam_y=round(random.random() * magnitude, 3),
                                  cam_z=round(random.random() * magnitude, 3), cov_mat=STANDARD_COVARIANCE * 1.5, cone_class="yellow")
-        plotter.execute_and_plot(STATIC_LOCALIZATION, [random_cone1, random_cone2], plot=show_frame_by_frame)
+        plotter.execute_and_plot(STATIC_LOCALIZATION, [random_cone1, random_cone2], plot=show_frame_by_frame, plot_car=False)
 
     # kill cones
     for _ in range(20):
-        plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=show_frame_by_frame)
+        plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=show_frame_by_frame, plot_car=False)
     print()
 
 
@@ -99,11 +104,12 @@ def full_track_cones(show_frame_by_frame=True, n_to_del=1, track=straight_track(
                      samples=8, insert_noise=True, predict_last=False):
     STATIC_LOCALIZATION = Localization(x_ego=0, y_ego=0, theta_ego=0, qyy=1, qxx=1)
     STANDARD_COVARIANCE = np.array([[1, 0], [0, 1]])
-    move_localization = Localization(x_ego=8, y_ego=0, theta_ego=np.radians(15), qyy=1, qxx=1)
+    move_localization = Localization(x_ego=8, y_ego=0, theta_ego=0, qyy=1, qxx=1)
 
     # Creating "ground truth"
     car, global_cones = initialize_simulation(track_func=track, car_angle=car_angle, fov=fov, samples=samples)
-    cones = global_to_ego_frame(car, global_cones)
+    # cones = global_to_ego_frame(car, global_cones)
+    cones = global_cones
 
     # Initiating tracker and plotter
     tracker = MultiObjectTracker()
@@ -124,13 +130,58 @@ def full_track_cones(show_frame_by_frame=True, n_to_del=1, track=straight_track(
     plotter.execute_and_plot(STATIC_LOCALIZATION, [], plot=show_frame_by_frame, plot_car=True)
 
 
-def diagonal_track(predict_last=False):
-    full_track_cones(predict_last=predict_last)
+def diagonal_track(show_frame_by_frame=True):
+    track = straight_track(m=2, b=-4)
+    movements = [Localization(x_ego=15, y_ego=0, theta_ego=0, qyy=1, qxx=1)] * 13
+
+    car, cones = initialize_simulation(track, cone_distance=20)
+    tracker = MultiObjectTracker()
+    plotter = ConsecutiveFramePlotter(tracker, def_ego=False, car=car, x_label="Theta", y_label="Range")
+
+    for localization in movements:
+        plotter.execute_and_plot(localization, cones, plot=show_frame_by_frame, plot_car=True)
 
 
+def circular(show_frame_by_frame=True):
+    track = circle_track(radius=5)
+    movements = [Localization(x_ego=-3, y_ego=0, theta_ego=0, qyy=1, qxx=1)] + \
+                [Localization(x_ego=-3, y_ego=0, theta_ego=0, qyy=1, qxx=1), Localization(x_ego=0, y_ego=0, theta_ego=-0.5, qyy=1, qxx=1)]*13
+
+    car, cones = initialize_simulation(track)
+    tracker = MultiObjectTracker()
+    plotter = ConsecutiveFramePlotter(tracker, def_ego=False, car=car, x_label="Theta", y_label="Range")
+
+    for localization in movements:
+        plotter.execute_and_plot(localization, cones, plot=show_frame_by_frame, plot_car=True, fov_plot_range=(3, 3))
+
+
+
+def bezier(show_frame_by_frame=True, n_to_del=0):
+    p0 = np.array([0, 0])
+    p1 = np.array([15, 0])
+    p2 = np.array([0, 15])
+    p3 = np.array([15, 15])
+
+    track = bezier_track(p0, p1, p2, p3)
+
+
+    movements = [Localization(x_ego=2, y_ego=0, theta_ego=0, qyy=1, qxx=1)] + \
+                  [Localization(x_ego=1, y_ego=0, theta_ego=0.3, qyy=1, qxx=1)] * 5 + \
+                [Localization(x_ego=2, y_ego=0, theta_ego=-0.1, qyy=1, qxx=1)] * 2 + \
+                [Localization(x_ego=2, y_ego=0, theta_ego=-0.15, qyy=1, qxx=1)] * 3
+
+    car, cones = initialize_simulation(track, cone_distance=2, car_angle=0)
+    tracker = MultiObjectTracker()
+    plotter = ConsecutiveFramePlotter(tracker, def_ego=False, car=car, x_label="Theta", y_label="Range")
+
+    for localization in movements:
+        new_det = copy.deepcopy(cones)
+        random_list_delete(new_det, n=n_to_del)
+        new_det = add_noise(new_det, noise_mu=0.2, noise_std=0.1, cov_noise_mu=0, cov_noise_std=0)
+        plotter.execute_and_plot(localization, new_det, plot=show_frame_by_frame, plot_car=True, fov_plot_range=(3, 3))
 def horizontal_track():
     straight = straight_track(m=0, b=0)
-    full_track_cones(show_frame_by_frame=True, n_to_del=2, track=straight, insert_noise=False)
+    full_track_cones(show_frame_by_frame=True, n_to_del=2, track=straight, insert_noise=True)
 
 """
 ###########################################
@@ -144,6 +195,8 @@ Track generation tests
 def test_cones():
     pass
 
+def sample_bezier_curve():
+    return [bezier_track(np.array([0, 0]), [10, 0], [5, 10], [15, 15])]
 
 def test_placement():
     _test_cone_placement([straight_track(m=3)], cone_dist=14)
